@@ -14,8 +14,20 @@ Route::match(['PUT', 'PATCH'], '/usuario/{id}', function(){
     // Aceita a combinação passada no primeiro parâmetro
 });
 
-Route::any('/usuario/{id}', function(){
+//Route::any('/usuario/{id}', function(){
   // Aceita qualquer verbo, a própria documentação oficial desencoraja o uso
-});
+//});
 
 // php artisan route:list --except-vendor -> Lista todas as rotas configuradas
+
+// AULA 4 - CSRF MECANISMO DE PROTEÇÃO
+Route::get('/form', [SiteController::class, 'submitForm'])->name('site.form');
+
+//Route::post('/usuario', [SiteController::class, 'store'])->name('user.store');
+
+// Dessa forma estamos informando ao laravel que qualquer requisição que venha dessa rota
+// não passará pelo midware do CSRF, o que deixa essa rota desprotegida
+// não precisaria colocar a diretiva @csrf na blade para passar o token no cabeçalho da requisição
+Route::post('/usuario', [SiteController::class, 'store'])
+    ->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class)
+    ->name('user.store');

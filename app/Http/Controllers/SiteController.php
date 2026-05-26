@@ -15,4 +15,18 @@ class SiteController extends Controller
         return view('contact');
     }
 
+    public function submitForm()
+    {
+        return view('form');
+    }
+
+    public function store(Request $request)
+    {
+        dump(
+            $request->all(),
+            $request->only(['name', 'email']),
+            $request->except(['token']),
+        );
+    }
+
 }
