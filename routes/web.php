@@ -10,9 +10,9 @@ Route::get('/', [SiteController::class, 'home'])->name('site.home');
 Route::get('/contato', [SiteController::class, 'contact'])->name('site.contact');
 
 // AULA 3 - UMA ROTA, VÁRIOS VERBOS
-Route::match(['PUT', 'PATCH'], '/usuario/{id}', function(){
-    // Aceita a combinação passada no primeiro parâmetro
-});
+//Route::match(['PUT', 'PATCH'], '/usuario/{id}', function(){
+//    // Aceita a combinação passada no primeiro parâmetro
+//});
 
 //Route::any('/usuario/{id}', function(){
   // Aceita qualquer verbo, a própria documentação oficial desencoraja o uso
@@ -31,3 +31,8 @@ Route::get('/form', [SiteController::class, 'submitForm'])->name('site.form');
 Route::post('/usuario', [SiteController::class, 'store'])
     ->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class)
     ->name('user.store');
+
+// AULA 5 - Form Spoofing - Verbo falso
+Route::get('/usuario/{id}', [SiteController::class, 'submitEditForm']);
+Route::match(['PUT', 'PATCH'],'/usuario/{user}', [SiteController::class, 'update'])
+    ->name('user.update');
