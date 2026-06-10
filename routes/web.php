@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\SingleController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // AULA 2 - ROTAS NOMEADAS
@@ -54,3 +57,25 @@ Route::get('/userEmail/{user:email}', [SiteController::class, 'showEmail'])->nam
 // ou ainda podemos sobrescrever os valores padrão de busca no modelo
 // navegando pelos métodos do eloquent, voce consegue encontrar os parametros de busca e sobrescrever
 // essa prática é fortemente desaconselhada pela comunidade e pelo próprio laravel
+
+// Um controlador com uma única responsabilidade
+// Não precisa dizer qual a action do controlador que precisa ser acessada
+Route::get('/teste', SingleController::class);
+
+// é possível agrupar por controlador, por middleware etc...
+// quanto mais você eenxugar o seu arquivo de rotas é melhor
+Route::controller(UserController::class)->group(function () {
+    Route::get('/usuario/{user}', 'show')->name('user.show');
+    Route::post('/usuario', 'store');
+    Route::match(['PUT', 'PATCH'], '/usuario/{user}/update', 'update');
+});
+
+// podemos renomear os nomes das rotas e os nomes do parametros no uri
+Route::resource('/artigos', PostController::class)
+    ->names([
+    'index' => 'posts.index',
+    'store' => 'posts.store',
+    ])
+    ->parameters([
+    'artigos' => 'post',
+    ]);
