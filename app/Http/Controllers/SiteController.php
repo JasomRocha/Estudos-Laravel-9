@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class SiteController extends Controller
@@ -49,4 +50,17 @@ class SiteController extends Controller
         );
     }
 
+    public function userComments($id, $comment): void {
+        dump($id, $comment);
+    }
+
+    public function show(User $user): void
+    {
+        dump($user);
+    }
+
+    public function showEmail(User $user): void
+    {
+        dump($user);
+    }
 }
