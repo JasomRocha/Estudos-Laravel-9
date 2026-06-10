@@ -79,3 +79,34 @@ Route::resource('/artigos', PostController::class)
     ->parameters([
     'artigos' => 'post',
     ]);
+
+// Agrupando por domain
+Route::domain(config('{account}.seudominio.com'))->group(function () {
+    Route::get('usuario/{user}/artigos', function ($account, $user) {
+        dump($account, $user);
+    })->name('user.artigos');
+});
+
+// Apenas para o midlleware funcionar
+Route::get('/login', function () {
+    echo 'efetue o seu login!';
+})->name('login');
+
+// Agrupando por middleware
+Route::middleware(['auth'])->get('/dashboard', function () {
+    Route::get('usuario/user', [SiteController::class, 'show']);
+});
+
+
+//Agrupando por prefixo
+Route::prefix('admin')->group(function () {
+    Route::get('/usuario/{user}', function ($user) {
+        dump($user);
+        echo " Só acessa com o prefixo na frente, se nao vai cair num 404";
+    });
+});
+
+// Agrupando por nome
+Route::name('admin.')->group(function () {
+    Route::get('admin/usuario/{user}', [SiteController::class, 'show'])->name('usuario.show');
+});
