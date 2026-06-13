@@ -110,6 +110,10 @@ use Illuminate\Support\Facades\Route;
 //Route::name('admin.')->group(function () {
 //    Route::get('admin/usuario/{user}', [SiteController::class, 'show'])->name('usuario.show');
 //});
+//
+//Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'as' => 'admin.'], function () {
+//    Route::get('/usuario/{user}', [SiteController::class, 'show'])->name('user.show');
+//});
 
 
 // Dessa forma colocamos a nossa rota depois de um midlleware, e agora limitamos
@@ -126,3 +130,15 @@ Route::middleware(['throttle:5,1'])->group(function () {
     Route::get('/', [SiteController::class, 'home'])->name('home');
     Route::get('/contato', [SiteController::class, 'contact'])->name('site.contact');
 });
+
+// Essa rota geralmente é utilizada para modificar telas brancas de erro
+// Serve pra você colocar uma página de erro personalizada
+Route::fallback(function () {
+    echo '404 - Page not found';
+});
+
+// Isso é uma maneira de importar as rotas, os arquivos de rota
+//require('site/routes.php');
+//require('arena/routes.php');
+//require('admin/routes.php');
+

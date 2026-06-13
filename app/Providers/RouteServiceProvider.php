@@ -36,6 +36,16 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
+
+            // Essa é outra maneira de importar arquivos de rota
+            Route::middleware('web')
+                ->group(base_path('routes/admin/routes.php'));
+
+            Route::middleware('web')
+                ->group(base_path('routes/arena/routes.php'));
+
+            Route::middleware('web')
+                ->group(base_path('routes/site/routes.php'));
         });
     }
 
