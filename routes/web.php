@@ -121,3 +121,8 @@ Route::middleware(['throttle:global'])->group(function () {
     Route::get('/contato', [SiteController::class, 'contact'])->name('site.contact');
 });
 
+// Outra forma seria passar os parametros depois do alias 5,1 - significa no máx 5 req a cada 1 min
+Route::middleware(['throttle:5,1'])->group(function () {
+    Route::get('/', [SiteController::class, 'home'])->name('home');
+    Route::get('/contato', [SiteController::class, 'contact'])->name('site.contact');
+});
