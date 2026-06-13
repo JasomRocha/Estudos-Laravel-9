@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Route;
 // AULA 2 - ROTAS NOMEADAS
 // Utilizar pré fixos para quando houverem varias homes, views etc.
 // Rotas nomeadas tornam a URI flexível, pois o que define a rota é o nome dela definido no "name"
-Route::get('/', [SiteController::class, 'home'])->name('site.home');
-Route::get('/contato', [SiteController::class, 'contact'])->name('site.contact');
+//Route::get('/', [SiteController::class, 'home'])->name('site.home');
+//Route::get('/contato', [SiteController::class, 'contact'])->name('site.contact');
 
 // AULA 3 - UMA ROTA, VÁRIOS VERBOS
 //Route::match(['PUT', 'PATCH'], '/usuario/{id}', function(){
@@ -49,10 +49,10 @@ Route::get('/contato', [SiteController::class, 'contact'])->name('site.contact')
 // O service container do laravel já pega o query param e joga pra o seu controlador
 //Route::get('/user/{id}/comments/{comment}', [SiteController::class, 'userComments']);
 
-Route::get('/usuario/{user}', [SiteController::class, 'show'])->name('site.show');
+//Route::get('/usuario/{user}', [SiteController::class, 'show'])->name('site.show');
 
 // Podemos definir qual o atributo de usuario ue vem na rquisição
-Route::get('/userEmail/{user:email}', [SiteController::class, 'showEmail'])->name('site.showEmail');
+//Route::get('/userEmail/{user:email}', [SiteController::class, 'showEmail'])->name('site.showEmail');
 
 // ou ainda podemos sobrescrever os valores padrão de busca no modelo
 // navegando pelos métodos do eloquent, voce consegue encontrar os parametros de busca e sobrescrever
@@ -60,53 +60,64 @@ Route::get('/userEmail/{user:email}', [SiteController::class, 'showEmail'])->nam
 
 // Um controlador com uma única responsabilidade
 // Não precisa dizer qual a action do controlador que precisa ser acessada
-Route::get('/teste', SingleController::class);
+//Route::get('/teste', SingleController::class);
 
 // é possível agrupar por controlador, por middleware etc...
 // quanto mais você eenxugar o seu arquivo de rotas é melhor
-Route::controller(UserController::class)->group(function () {
-    Route::get('/usuario/{user}', 'show')->name('user.show');
-    Route::post('/usuario', 'store');
-    Route::match(['PUT', 'PATCH'], '/usuario/{user}/update', 'update');
-});
+//Route::controller(UserController::class)->group(function () {
+//    Route::get('/usuario/{user}', 'show')->name('user.show');
+//    Route::post('/usuario', 'store');
+//    Route::match(['PUT', 'PATCH'], '/usuario/{user}/update', 'update');
+//});
 
 // podemos renomear os nomes das rotas e os nomes do parametros no uri
-Route::resource('/artigos', PostController::class)
-    ->names([
-    'index' => 'posts.index',
-    'store' => 'posts.store',
-    ])
-    ->parameters([
-    'artigos' => 'post',
-    ]);
+//Route::resource('/artigos', PostController::class)
+//    ->names([
+//    'index' => 'posts.index',
+//    'store' => 'posts.store',
+//    ])
+//    ->parameters([
+//    'artigos' => 'post',
+//    ]);
 
 // Agrupando por domain
-Route::domain(config('{account}.seudominio.com'))->group(function () {
-    Route::get('usuario/{user}/artigos', function ($account, $user) {
-        dump($account, $user);
-    })->name('user.artigos');
-});
+//Route::domain(config('{account}.seudominio.com'))->group(function () {
+//    Route::get('usuario/{user}/artigos', function ($account, $user) {
+//        dump($account, $user);
+//    })->name('user.artigos');
+//});
 
 // Apenas para o midlleware funcionar
-Route::get('/login', function () {
-    echo 'efetue o seu login!';
-})->name('login');
+//Route::get('/login', function () {
+//    echo 'efetue o seu login!';
+//})->name('login');
 
 // Agrupando por middleware
-Route::middleware(['auth'])->get('/dashboard', function () {
-    Route::get('usuario/user', [SiteController::class, 'show']);
-});
+//Route::middleware(['auth'])->get('/dashboard', function () {
+//    Route::get('usuario/user', [SiteController::class, 'show']);
+//});
 
 
 //Agrupando por prefixo
-Route::prefix('admin')->group(function () {
-    Route::get('/usuario/{user}', function ($user) {
-        dump($user);
-        echo " Só acessa com o prefixo na frente, se nao vai cair num 404";
-    });
-});
+//Route::prefix('admin')->group(function () {
+//    Route::get('/usuario/{user}', function ($user) {
+//        dump($user);
+//        echo " Só acessa com o prefixo na frente, se nao vai cair num 404";
+//    });
+//});
 
 // Agrupando por nome
-Route::name('admin.')->group(function () {
-    Route::get('admin/usuario/{user}', [SiteController::class, 'show'])->name('usuario.show');
+//Route::name('admin.')->group(function () {
+//    Route::get('admin/usuario/{user}', [SiteController::class, 'show'])->name('usuario.show');
+//});
+
+
+// Dessa forma colocamos a nossa rota depois de um midlleware, e agora limitamos
+// a quantidade de requisições máximas para ele que são 5
+// o laravel cuida da burocracia para mim
+// Depois que fizermos mais de 5 rqusições em 1 minuto ele vai dar "429 - Too many requests"
+Route::middleware(['throttle:global'])->group(function () {
+    Route::get('/', [SiteController::class, 'home'])->name('home');
+    Route::get('/contato', [SiteController::class, 'contact'])->name('site.contact');
 });
+

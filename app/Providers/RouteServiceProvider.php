@@ -26,6 +26,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Configuração da quantidade de requisições por minuto para um endpoit
         $this->configureRateLimiting();
 
         $this->routes(function () {
@@ -45,6 +46,10 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function configureRateLimiting()
     {
+        RateLimiter::for('global', function (Request $request) {
+            return Limit::perMinute(5);
+        });
+
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
